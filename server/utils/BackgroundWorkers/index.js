@@ -24,16 +24,13 @@ class BackgroundService {
 
   async boot() {
     const { DocumentSyncQueue } = require("../../models/documentSyncQueue");
-    if (!(await DocumentSyncQueue.enabled())) {
-      this.#log("Feature is not enabled and will not be started.");
-      return;
-    }
+    const docSyncEnabled = await DocumentSyncQueue.enabled();
 
     this.#log("Starting...");
     this.bree = new Bree({
       logger: this.logger,
       root: this.#root,
-      jobs: this.jobs(),
+      jobs: this.jobs(docSyncEnabled),
       errorHandler: this.onError,
       workerMessageHandler: this.onWorkerMessageHandler,
       runJobsAs: "process",
@@ -53,15 +50,22 @@ class BackgroundService {
   }
 
   /** @returns {import("@mintplex-labs/bree").Job[]} */
-  jobs() {
-    return [
-      // Job for auto-sync of documents
-      // https://github.com/breejs/bree
+  jobs(enableDocSync = false) {
+    const jobs = [
       {
-        name: "sync-watched-documents",
-        interval: "1hr",
+        name: "process-agent-tasks",
+        interval: "1m",
       },
     ];
+
+    if (enableDocSync) {
+      jobs.push({
+        name: "sync-watched-documents",
+        interval: "1hr",
+      });
+    }
+
+    return jobs;
   }
 
   onError(error, _workerMetadata) {
