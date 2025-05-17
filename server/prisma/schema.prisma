@@ -355,3 +355,17 @@ model prompt_history {
 
   @@index([workspaceId])
 }
+
+model tasks {
+  id              Int      @id @default(autoincrement())
+  description     String
+  status          String   @default("queued")
+  assignedAgentId Int?
+  parentTaskId    Int?
+  context         Json?
+  createdAt       DateTime @default(now())
+  lastUpdatedAt   DateTime @updatedAt
+
+  @@index([assignedAgentId])
+  @@index([parentTaskId])
+}
