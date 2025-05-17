@@ -355,3 +355,19 @@ model prompt_history {
 
   @@index([workspaceId])
 }
+
+model agent_tasks {
+  id            Int                           @id @default(autoincrement())
+  invocation_id Int
+  parent_id     Int?
+  status        String                        @default("queued")
+  context       String?
+  createdAt     DateTime                      @default(now())
+  updatedAt     DateTime                      @updatedAt
+  invocation    workspace_agent_invocations   @relation(fields: [invocation_id], references: [id], onDelete: Cascade)
+  parent        agent_tasks?                  @relation("AgentTaskChildren", fields: [parent_id], references: [id])
+  children      agent_tasks[]                 @relation("AgentTaskChildren")
+
+  @@index([invocation_id])
+  @@index([parent_id])
+}

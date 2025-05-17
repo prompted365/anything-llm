@@ -562,6 +562,12 @@ ${this.getHistory({ to: route.to })
       ...chatHistory,
     ];
 
+    // Insert any shared context provided by the handler
+    const shared = this.handlerProps?.getSharedContext?.();
+    if (shared) {
+      messages.splice(1, 0, { role: "system", content: shared });
+    }
+
     // get the functions that the node can call
     const functions = fromConfig.functions
       ?.map((name) => this.functions.get(this.#parseFunctionName(name)))
