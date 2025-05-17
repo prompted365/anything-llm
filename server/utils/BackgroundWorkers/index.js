@@ -61,6 +61,10 @@ class BackgroundService {
         name: "sync-watched-documents",
         interval: "1hr",
       },
+      {
+        name: "process-tasks",
+        interval: "5s",
+      },
     ];
   }
 
