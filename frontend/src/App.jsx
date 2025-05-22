@@ -70,6 +70,7 @@ const EmbedChats = lazy(() => import("@/pages/GeneralSettings/EmbedChats"));
 const PrivacyAndData = lazy(
   () => import("@/pages/GeneralSettings/PrivacyAndData")
 );
+const MCPSettings = lazy(() => import("@/pages/GeneralSettings/MCPSettings"));
 const ExperimentalFeatures = lazy(
   () => import("@/pages/Admin/ExperimentalFeatures")
 );
@@ -227,6 +228,10 @@ export default function App() {
                     element={
                       <ManagerRoute Component={GeneralBrowserExtension} />
                     }
+                  />
+                  <Route
+                    path="/settings/mcp"
+                    element={<AdminRoute Component={MCPSettings} />}
                   />
                   <Route
                     path="/settings/workspace-chats"
