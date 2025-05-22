@@ -23,6 +23,7 @@ These features are planned next to make the A2A implementation spec‑complete:
 - Persist tasks in a database or external store instead of memory.
 - Extend the agent card with additional skills and metadata as new features are added.
 - Expand automated tests and lint checks once CI installs dependencies.
+- Support pausing queued tasks for human review via new orchestrator endpoints.
 
 ## Deployment Notes
 - Set `PUBLIC_BASE_URL` to the externally reachable server URL so the agent card advertises the correct endpoint.

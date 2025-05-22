@@ -182,6 +182,10 @@ project scoped files named `project-<slug>.modes.json` can be created to extend
 or override the global modes for a specific workspace. Tasks delegated through
 the orchestrator will appear in the `/task-monitor` stream.
 
+Modes may specify `"requiresHuman": true` to pause processing until a person
+approves the task. Use `POST /api/tasks/:id/resume` to continue or
+`POST /api/tasks/:id/await-human` to manually pause any queued task.
+
 [Learn about documents](./server/storage/documents/DOCUMENTS.md)
 
 [Learn about vector caching](./server/storage/vector-cache/VECTOR_CACHE.md)
@@ -194,6 +198,7 @@ Configure a webhook for push notifications using `tasks/pushNotificationConfig/s
 Tasks may request more input via an `input-required` state before completing. You can
 reconnect to the event stream with `tasks/resubscribe` and receive updates on every
 status transition. File uploads are echoed back as artifacts when processed.
+Tasks may also be paused for manual review with `POST /api/tasks/:id/await-human` and resumed via `POST /api/tasks/:id/resume`.
 
 ## External Apps & Integrations
 
