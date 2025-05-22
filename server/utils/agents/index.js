@@ -4,6 +4,7 @@ const {
   WorkspaceAgentInvocation,
 } = require("../../models/workspaceAgentInvocation");
 const { WorkspaceChats } = require("../../models/workspaceChats");
+const { AgentTasks } = require("../../models/agentTasks");
 const { safeJsonParse } = require("../http");
 const { USER_AGENT, WORKSPACE_AGENT } = require("./defaults");
 const ImportedPlugin = require("./imported");
@@ -18,6 +19,8 @@ class AgentHandler {
   channel = null;
   provider = null;
   model = null;
+  task = null;
+  taskContext = null;
 
   constructor({ uuid }) {
     this.#invocationUUID = uuid;
@@ -526,13 +529,16 @@ class AgentHandler {
       socket,
     }
   ) {
+    const history = this.taskContext ?? (await this.#chatHistory(20));
     this.aibitat = new AIbitat({
       provider: this.provider ?? "openai",
       model: this.model ?? "gpt-4o",
-      chats: await this.#chatHistory(20),
+      chats: history,
       handlerProps: {
         invocation: this.invocation,
         log: this.log,
+        getSharedContext: () =>
+          safeJsonParse(this.task?.context || "{}")?.shared ?? null,
       },
     });
 
@@ -563,6 +569,41 @@ class AgentHandler {
 
     // Attach all required plugins for functions to operate.
     await this.#attachPlugins(args);
+
+    this.aibitat.onTerminate(async () => {
+      if (this.task) await this.completeTask();
+    });
+  }
+
+  async pickTask(taskId) {
+    this.task = await AgentTasks.get({ id: taskId });
+    if (!this.task) return null;
+    this.taskContext =
+      safeJsonParse(this.task.context || "{}")?.history || null;
+    await AgentTasks.update(this.task.id, { status: "in-progress" });
+    return this.task;
+  }
+
+  async completeTask(contextUpdates = {}) {
+    if (!this.task) return;
+    const existing = safeJsonParse(this.task.context || "{}");
+    const newContext = {
+      ...existing,
+      ...contextUpdates,
+      history: this.aibitat?.chats || existing.history || [],
+    };
+    await AgentTasks.update(this.task.id, {
+      context: newContext,
+      status: "completed",
+    });
+    const children = await AgentTasks.children(this.task.id);
+    for (const child of children) {
+      const childCtx = safeJsonParse(child.context || "{}");
+      await AgentTasks.update(child.id, {
+        context: { ...childCtx, parentResult: newContext },
+        status: "queued",
+      });
+    }
   }
 
   startAgentCluster() {
