@@ -1,27 +1,29 @@
 # Implementation Plan: Integrate Google A2A Protocol
 
-This document outlines the steps required to provide basic support for the [Google Agent2Agent (A2A) protocol](https://github.com/google/A2A) in AnythingLLM. The goal is to expose a minimal A2A compatible endpoint and agent card so that external agents can discover and interact with the platform.
+This document tracks the steps to expose AnythingLLM through Google's [Agent2Agent (A2A) protocol](https://github.com/google/A2A).  The initial version of the implementation is already in place and new items build on top of it.
 
-## 1. Serve an Agent Card
-- Create a JSON document compliant with the A2A `AgentCard` specification.
-- Host the card at `/.well-known/agent.json`.
-- Include basic metadata describing AnythingLLM and the base service URL (`/a2a/api`).
-- Initially advertise simple chat capability with optional streaming and webhook push notification support.
+## Phase 1 - Minimal Support (completed)
+- **Agent card** served at `/.well-known/agent.json` describing the A2A endpoint and advertising streaming and webhook capabilities.
+- **JSON‑RPC endpoint** at `/a2a/api` validating requests and supporting:
+  - `message/send` – creates a task and returns the full object.
+  - `message/stream` – single-event SSE response.
+  - `tasks/get` and `tasks/cancel` for basic in-memory task management.
+  - `tasks/pushNotificationConfig/set` and `/get` to configure a global webhook that receives the created task payload.
+- Tasks are stored in an in-memory `Map` and push notifications fire when a task is created.
 
-## 2. JSON‑RPC Endpoint
-- Add an Express route at `/a2a/api` to handle JSON‑RPC requests.
-- Validate the incoming request structure (`jsonrpc`, `method`, `params`).
-- For now, implement a stub handler for `message/send` that returns a placeholder response.
-- Respond with JSON‑RPC errors for unsupported methods or invalid payloads.
+## Phase 2 - Near‑term Improvements
+These features are planned next to make the A2A implementation spec‑complete:
+- Per‑task webhook configuration including token echo in the `X-A2A-Notification-Token` header.
+- Keep the SSE `message/stream` connection open and emit periodic status updates; add a `tasks/resubscribe` method.
+- Lightweight bearer authentication middleware and corresponding `securitySchemes` entry in the agent card.
+- Populate `status.message` when creating a task so clients immediately receive a valid response structure.
+- Optionally purge old tasks from the in-memory store after a timeout.
 
-## 3. Future Enhancements
-- Basic in-memory task management added via `tasks/get` and `tasks/cancel`. Persistent storage can be added later.
-- Added SSE support for `message/stream` (single event response) and error stubs for `tasks/resubscribe`.
-- Basic webhook support added via `tasks/pushNotificationConfig/*` to allow POST notifications when tasks are created.
-- Additional skills can be exposed in the agent card as capabilities expand.
+## Future Enhancements
+- Persist tasks in a database or external store instead of memory.
+- Extend the agent card with additional skills and metadata as new features are added.
+- Expand automated tests and lint checks once CI installs dependencies.
 
-## 4. Deployment Notes
-- `PUBLIC_BASE_URL` environment variable should reflect the externally reachable URL of the server so that the agent card contains the correct service endpoint.
-- Ensure TLS is enabled in production deployments as required by the A2A specification.
-
-This initial integration allows experimentation with A2A while leaving room for a more complete implementation in the future.
+## Deployment Notes
+- Set `PUBLIC_BASE_URL` to the externally reachable server URL so the agent card advertises the correct endpoint.
+- Enable TLS in production as required by the A2A specification.
