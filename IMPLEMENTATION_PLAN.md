@@ -6,7 +6,7 @@ This document outlines the steps required to provide basic support for the [Goog
 - Create a JSON document compliant with the A2A `AgentCard` specification.
 - Host the card at `/.well-known/agent.json`.
 - Include basic metadata describing AnythingLLM and the base service URL (`/a2a/api`).
-- Initially advertise only simple chat capability with no streaming or push notification support.
+- Initially advertise simple chat capability with optional streaming and webhook push notification support.
 
 ## 2. JSON‑RPC Endpoint
 - Add an Express route at `/a2a/api` to handle JSON‑RPC requests.
@@ -17,7 +17,7 @@ This document outlines the steps required to provide basic support for the [Goog
 ## 3. Future Enhancements
 - Basic in-memory task management added via `tasks/get` and `tasks/cancel`. Persistent storage can be added later.
 - Added SSE support for `message/stream` (single event response) and error stubs for `tasks/resubscribe`.
-- Push notifications via `tasks/pushNotificationConfig/*` remain unimplemented.
+- Basic webhook support added via `tasks/pushNotificationConfig/*` to allow POST notifications when tasks are created.
 - Additional skills can be exposed in the agent card as capabilities expand.
 
 ## 4. Deployment Notes

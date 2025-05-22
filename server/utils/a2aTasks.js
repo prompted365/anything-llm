@@ -1,4 +1,5 @@
 const { v4: uuidv4 } = require('uuid');
+const { sendPushNotification } = require('./a2aPushNotifications');
 
 const tasks = new Map();
 
@@ -14,6 +15,8 @@ function createTask(message) {
     metadata: {},
   };
   tasks.set(id, task);
+  // Notify external systems if configured
+  sendPushNotification(task);
   return task;
 }
 

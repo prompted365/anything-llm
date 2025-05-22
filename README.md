@@ -186,6 +186,12 @@ the orchestrator will appear in the `/task-monitor` stream.
 
 [Learn about vector caching](./server/storage/vector-cache/VECTOR_CACHE.md)
 
+### Google A2A Agent Protocol
+
+AnythingLLM exposes a minimal [A2A](https://github.com/google/A2A) compatible API at `/a2a/api`. The agent card is served at `/.well-known/agent.json`.
+Tasks are tracked in memory and can be retrieved with `tasks/get` or cancelled with `tasks/cancel`. Chat messages can stream results via `message/stream`.
+Configure a webhook for push notifications using `tasks/pushNotificationConfig/set` and fetch the current setting via `tasks/pushNotificationConfig/get`.
+
 ## External Apps & Integrations
 
 _These are apps that are not maintained by Mintplex Labs, but are compatible with AnythingLLM. A listing here is not an endorsement._

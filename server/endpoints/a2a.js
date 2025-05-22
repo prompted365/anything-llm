@@ -1,6 +1,10 @@
 const { reqBody } = require("../utils/http");
 const { getAgentCard } = require("../utils/a2aAgentCard");
 const { createTask, getTask, cancelTask } = require("../utils/a2aTasks");
+const {
+  setPushNotificationConfig: setPushConfig,
+  getPushNotificationConfig: getPushConfig,
+} = require("../utils/a2aPushNotifications");
 
 function a2aEndpoints(app) {
   if (!app) return;
@@ -85,13 +89,28 @@ function a2aEndpoints(app) {
             error: { code: -32004, message: "Streaming not yet supported" },
           });
         }
-        case "tasks/pushNotificationConfig/set":
+        case "tasks/pushNotificationConfig/set": {
+          const url = body.params?.url;
+          const config = setPushConfig({ url });
+          if (!config) {
+            return res.status(400).json({
+              jsonrpc: "2.0",
+              id: body.id,
+              error: { code: -32602, message: "Invalid params" },
+            });
+          }
+          return res.json({ jsonrpc: "2.0", id: body.id, result: config });
+        }
         case "tasks/pushNotificationConfig/get": {
-          return res.status(400).json({
-            jsonrpc: "2.0",
-            id: body.id,
-            error: { code: -32004, message: "Push notifications not supported" },
-          });
+          const config = getPushConfig();
+          if (!config) {
+            return res.status(400).json({
+              jsonrpc: "2.0",
+              id: body.id,
+              error: { code: -32004, message: "Push notifications not configured" },
+            });
+          }
+          return res.json({ jsonrpc: "2.0", id: body.id, result: config });
         }
         default:
           return res.status(400).json({
