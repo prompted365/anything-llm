@@ -14,7 +14,14 @@ function getAgentCard() {
         description: "Free-form chat. Supports multi-turn input, structured JSON replies, file analysis and webhook notifications.",
         tags: ["chat", "json", "file", "multiturn"],
       },
+      {
+        id: "task-management",
+        name: "Task Queue Control",
+        description: "Pause and resume queued tasks for human review.",
+        tags: ["tasks", "pause", "resume"],
+      },
     ],
+    metadata: { repository: "https://github.com/Mintplex-Labs/anything-llm" },
   };
 }
 
