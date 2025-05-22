@@ -1,8 +1,7 @@
 const pluralize = require("pluralize");
-const {
-  WorkspaceAgentInvocation,
-} = require("../../models/workspaceAgentInvocation");
+const { WorkspaceAgentInvocation } = require("../../models/workspaceAgentInvocation");
 const { writeResponseChunk } = require("../helpers/chat/responses");
+const { taskQueue } = require("../taskQueue");
 
 async function grepAgents({
   uuid,
@@ -39,17 +38,8 @@ async function grepAgents({
       return;
     }
 
-    writeResponseChunk(response, {
-      id: uuid,
-      type: "agentInitWebsocketConnection",
-      textResponse: null,
-      sources: [],
-      close: false,
-      error: null,
-      websocketUUID: newInvocation.uuid,
-    });
+    const taskId = taskQueue.add({ uuid: newInvocation.uuid });
 
-    // Close HTTP stream-able chunk response method because we will swap to agents now.
     writeResponseChunk(response, {
       id: uuid,
       type: "statusResponse",
@@ -58,7 +48,7 @@ async function grepAgents({
         agentHandles.length
       )} ${agentHandles.join(
         ", "
-      )} invoked.\nSwapping over to agent chat. Type /exit to exit agent execution loop early.`,
+      )} queued with task id ${taskId}. Monitor via /task-monitor websocket.`,
       sources: [],
       close: true,
       error: null,
