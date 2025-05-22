@@ -6,7 +6,7 @@ function getAgentCard() {
     version: "0.1.0",
     capabilities: {
       streaming: true,
-      pushNotifications: false,
+      pushNotifications: true,
     },
     defaultInputModes: ["application/json", "text/plain"],
     defaultOutputModes: ["application/json"],
