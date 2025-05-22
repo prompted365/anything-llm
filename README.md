@@ -174,6 +174,14 @@ Mintplex Labs & the community maintain a number of deployment methods, scripts, 
 - `yarn dev:collector` To then run the document collector (from root of repo).
 - `/task-monitor` WebSocket endpoint streams queued agent task updates.
 
+### Agent Orchestrator
+
+Task delegation to agent modes is driven by JSON configuration files. Global
+mode definitions live in `storage/orchestrator/global.modes.json`. Additional
+project scoped files named `project-<slug>.modes.json` can be created to extend
+or override the global modes for a specific workspace. Tasks delegated through
+the orchestrator will appear in the `/task-monitor` stream.
+
 [Learn about documents](./server/storage/documents/DOCUMENTS.md)
 
 [Learn about vector caching](./server/storage/vector-cache/VECTOR_CACHE.md)
