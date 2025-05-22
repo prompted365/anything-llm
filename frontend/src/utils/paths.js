@@ -144,6 +144,9 @@ export default {
     logs: () => {
       return "/settings/event-logs";
     },
+    taskMonitor: () => {
+      return "/settings/task-monitor";
+    },
     privacy: () => {
       return "/settings/privacy";
     },

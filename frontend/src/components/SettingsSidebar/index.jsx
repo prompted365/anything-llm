@@ -366,6 +366,12 @@ const SidebarOptions = ({ user = null, t }) => (
               roles: ["admin"],
             },
             {
+              btnText: t("settings.task-monitor"),
+              href: paths.settings.taskMonitor(),
+              flex: true,
+              roles: ["admin"],
+            },
+            {
               btnText: t("settings.api-keys"),
               href: paths.settings.apiKeys(),
               flex: true,

@@ -95,6 +95,7 @@ const TRANSLATIONS = {
     "embed-chats": "Chat Embed History",
     security: "Security",
     "event-logs": "Event Logs",
+    "task-monitor": "Task Monitor",
     privacy: "Privacy & Data",
     "ai-providers": "AI Providers",
     "agent-skills": "Agent Skills",
@@ -705,6 +706,12 @@ const TRANSLATIONS = {
       user: "User",
       occurred: "Occurred At",
     },
+  },
+
+  tasks: {
+    title: "Task Monitor",
+    description: "View and monitor tasks delegated for processing.",
+    empty: "No tasks found.",
   },
 
   // Privacy & Data-Handling
