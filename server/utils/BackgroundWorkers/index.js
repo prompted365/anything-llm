@@ -56,6 +56,10 @@ class BackgroundService {
         name: "process-agent-tasks",
         interval: "1m",
       },
+      {
+        name: "process-tasks",
+        interval: "5s",
+      },
     ];
 
     if (enableDocSync) {

@@ -63,10 +63,11 @@ documentEndpoints(apiRouter);
 agentWebsocket(apiRouter);
 taskQueueEndpoint(apiRouter);
 experimentalEndpoints(apiRouter);
-developerEndpoints(app, apiRouter);
-communityHubEndpoints(apiRouter);
-agentFlowEndpoints(apiRouter);
-mcpServersEndpoints(apiRouter);
+  developerEndpoints(app, apiRouter);
+  communityHubEndpoints(apiRouter);
+  agentFlowEndpoints(apiRouter);
+  mcpServersEndpoints(apiRouter);
+  taskEndpoints(apiRouter);
 
 // Externally facing embedder endpoints
 embeddedEndpoints(apiRouter);

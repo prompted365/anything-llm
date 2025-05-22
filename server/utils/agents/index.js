@@ -552,6 +552,12 @@ class AgentHandler {
     );
     this.aibitat.use(AgentPlugins.chatHistory.plugin());
 
+    // Attach command palette plugin for user accessible commands.
+    this.log(
+      `Attached ${AgentPlugins.commandPalette.name} plugin to Agent cluster`
+    );
+    this.aibitat.use(AgentPlugins.commandPalette.plugin());
+
     // Load required agents (Default + custom)
     await this.#loadAgents();
 

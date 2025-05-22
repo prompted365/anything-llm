@@ -149,7 +149,7 @@ function convertToChatHistory(history = []) {
         chatId: id,
       },
       {
-        type: data?.type || "chart",
+        type: data?.type || "chat",
         role: "assistant",
         content: data.text,
         sources: data.sources || [],
