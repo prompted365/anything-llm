@@ -105,6 +105,7 @@ const TRANSLATIONS = {
     "experimental-features": "Experimental Features",
     contact: "Contact Support",
     "browser-extension": "Browser Extension",
+    mcp: "MCP Settings",
   },
 
   // Page Definitions
@@ -924,6 +925,14 @@ const TRANSLATIONS = {
       watch_explained_block3_end: " admin view.",
       accept: "Okay, got it",
     },
+  },
+
+  mcp: {
+    title: "Model Context Protocol",
+    description: "Configure host, client, and server definitions for MCP.",
+    host: "MCP Host",
+    client: "MCP Client",
+    servers: "Server Definitions",
   },
 
   chat_window: {

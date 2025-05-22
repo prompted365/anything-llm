@@ -159,6 +159,9 @@ export default {
     browserExtension: () => {
       return `/settings/browser-extension`;
     },
+    mcp: () => {
+      return `/settings/mcp`;
+    },
     experimental: () => {
       return `/settings/beta-features`;
     },

@@ -389,6 +389,12 @@ const SidebarOptions = ({ user = null, t }) => (
               flex: true,
               roles: ["admin", "manager"],
             },
+            {
+              btnText: t("settings.mcp"),
+              href: paths.settings.mcp(),
+              flex: true,
+              roles: ["admin"],
+            },
           ]}
         />
         <Option
