@@ -47,4 +47,11 @@ function cancelTask(id) {
   return task;
 }
 
-module.exports = { createTask, getTask, cancelTask, setStatus, tasks };
+function requestHumanInput(id, msgParts = []) {
+  const task = tasks.get(id);
+  if (!task) return null;
+  setStatus(task, 'input-required', msgParts);
+  return task;
+}
+
+module.exports = { createTask, getTask, cancelTask, requestHumanInput, setStatus, tasks };

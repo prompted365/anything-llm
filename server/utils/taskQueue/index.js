@@ -83,6 +83,23 @@ class TaskQueue {
     }
   }
 
+  awaitHuman(taskId) {
+    const task = this.tasks.find(t => t.id === taskId);
+    if (task) {
+      task.status = 'awaiting-human';
+      task.locked = false;
+      stateMgr.set(task.id, 'awaiting-human');
+    }
+  }
+
+  resume(taskId) {
+    const task = this.tasks.find(t => t.id === taskId);
+    if (task && task.status === 'awaiting-human') {
+      task.status = 'pending';
+      stateMgr.set(task.id, 'pending');
+    }
+  }
+
   list() {
     return this.tasks.map(t => ({
       id: t.id,

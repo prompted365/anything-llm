@@ -66,6 +66,9 @@ class AgentOrchestrator {
     const mode = this.mode(slug);
     if (!mode) throw new Error(`Unknown mode slug: ${slug}`);
     const id = taskQueue.add({ ...payload, mode: slug }, { ...options, group: slug });
+    if (mode.requiresHuman) {
+      taskQueue.awaitHuman(id);
+    }
     return id;
   }
 }
