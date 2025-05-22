@@ -1,21 +1,25 @@
-let pushNotificationConfig = null;
+const pushConfigs = new Map();
 
-function setPushNotificationConfig(config) {
-  if (!config || typeof config.url !== 'string') return null;
-  pushNotificationConfig = { url: config.url };
-  return pushNotificationConfig;
+function setPushNotificationConfig(taskId, cfg) {
+  if (!(cfg?.url)) return null;
+  pushConfigs.set(taskId, cfg);
+  return cfg;
 }
 
-function getPushNotificationConfig() {
-  return pushNotificationConfig;
+function getPushNotificationConfig(taskId) {
+  return pushConfigs.get(taskId) || null;
 }
 
 async function sendPushNotification(task) {
-  if (!pushNotificationConfig?.url) return;
+  const cfg = pushConfigs.get(task.id);
+  if (!cfg?.url) return;
   try {
-    await fetch(pushNotificationConfig.url, {
+    await fetch(cfg.url, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        ...(cfg.token ? { 'X-A2A-Notification-Token': cfg.token } : {}),
+      },
       body: JSON.stringify(task),
     });
   } catch (e) {

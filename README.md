@@ -191,6 +191,9 @@ the orchestrator will appear in the `/task-monitor` stream.
 AnythingLLM exposes a minimal [A2A](https://github.com/google/A2A) compatible API at `/a2a/api`. The agent card is served at `/.well-known/agent.json`.
 Tasks are tracked in memory and can be retrieved with `tasks/get` or cancelled with `tasks/cancel`. Chat messages can stream results via `message/stream`.
 Configure a webhook for push notifications using `tasks/pushNotificationConfig/set` and fetch the current setting via `tasks/pushNotificationConfig/get`.
+Tasks may request more input via an `input-required` state before completing. You can
+reconnect to the event stream with `tasks/resubscribe` and receive updates on every
+status transition. File uploads are echoed back as artifacts when processed.
 
 ## External Apps & Integrations
 
