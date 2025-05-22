@@ -1,10 +1,39 @@
-const { v4: uuidv4 } = require('uuid');
-const { stateMgr } = require('../stateMgr');
+const { v4: uuidv4 } = require("uuid");
+const { stateMgr } = require("../stateMgr");
+const fs = require("fs");
+const path = require("path");
+
+const PERSIST_PATH = path.resolve(__dirname, "../../storage/task-queue.json");
+
+function loadPersisted() {
+  try {
+    if (!fs.existsSync(PERSIST_PATH)) return [];
+    const raw = fs.readFileSync(PERSIST_PATH, "utf8");
+    const arr = JSON.parse(raw);
+    return arr.map((t) => ({ ...t, runAt: new Date(t.runAt) }));
+  } catch (e) {
+    console.error("Failed to load persisted task queue", e);
+    return [];
+  }
+}
+
+function persist(arr) {
+  try {
+    fs.mkdirSync(path.dirname(PERSIST_PATH), { recursive: true });
+    fs.writeFileSync(
+      PERSIST_PATH,
+      JSON.stringify(arr.map((t) => ({ ...t, runAt: t.runAt.toISOString() })),
+      "utf8"
+    );
+  } catch (e) {
+    console.error("Failed to persist task queue", e);
+  }
+}
 
 class TaskQueue {
   constructor() {
     if (TaskQueue.instance) return TaskQueue.instance;
-    this.tasks = [];
+    this.tasks = loadPersisted();
     TaskQueue.instance = this;
   }
 
@@ -27,6 +56,7 @@ class TaskQueue {
     this.tasks.push(task);
     this.sort();
     stateMgr.set(task.id, 'pending');
+    persist(this.tasks);
     return task.id;
   }
 
@@ -63,6 +93,7 @@ class TaskQueue {
         // remove finished tasks
         this.tasks = this.tasks.filter(t => t.id !== taskId);
       }
+      persist(this.tasks);
     }
   }
 
@@ -72,6 +103,7 @@ class TaskQueue {
       task.status = 'frozen';
       task.locked = false;
       stateMgr.set(task.id, 'frozen');
+      persist(this.tasks);
     }
   }
 
@@ -80,6 +112,7 @@ class TaskQueue {
     if (task && task.status === 'frozen') {
       task.status = 'pending';
       stateMgr.set(task.id, 'pending');
+      persist(this.tasks);
     }
   }
 
@@ -89,6 +122,7 @@ class TaskQueue {
       task.status = 'awaiting-human';
       task.locked = false;
       stateMgr.set(task.id, 'awaiting-human');
+      persist(this.tasks);
     }
   }
 
@@ -97,6 +131,7 @@ class TaskQueue {
     if (task && task.status === 'awaiting-human') {
       task.status = 'pending';
       stateMgr.set(task.id, 'pending');
+      persist(this.tasks);
     }
   }
 

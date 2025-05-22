@@ -1,8 +1,39 @@
-const { v4: uuidv4 } = require('uuid');
-const { sendPushNotification } = require('./a2aPushNotifications');
-const bus = require('./eventBus');
+const { v4: uuidv4 } = require("uuid");
+const fs = require("fs");
+const path = require("path");
+const { sendPushNotification } = require("./a2aPushNotifications");
+const bus = require("./eventBus");
 
-const tasks = new Map();
+const PERSIST_PATH = path.resolve(__dirname, "../storage/a2aTasks.json");
+
+function loadPersistedTasks() {
+  try {
+    if (!fs.existsSync(PERSIST_PATH)) return new Map();
+    const raw = fs.readFileSync(PERSIST_PATH, "utf8");
+    const data = JSON.parse(raw);
+    const map = new Map();
+    for (const [k, v] of Object.entries(data)) {
+      map.set(k, v);
+    }
+    return map;
+  } catch (e) {
+    console.error("Failed to load persisted A2A tasks", e);
+    return new Map();
+  }
+}
+
+function persistTasks(map) {
+  try {
+    const obj = {};
+    for (const [k, v] of map.entries()) obj[k] = v;
+    fs.mkdirSync(path.dirname(PERSIST_PATH), { recursive: true });
+    fs.writeFileSync(PERSIST_PATH, JSON.stringify(obj, null, 2));
+  } catch (e) {
+    console.error("Failed to persist A2A tasks", e);
+  }
+}
+
+const tasks = loadPersistedTasks();
 
 function setStatus(task, state, msgPartArray = []) {
   task.status = {
@@ -14,6 +45,7 @@ function setStatus(task, state, msgPartArray = []) {
   };
   sendPushNotification(task);
   bus.emit(`task:${task.id}`, { taskId: task.id, event: 'status', payload: task.status });
+  persistTasks(tasks);
 }
 
 function createTask(message, metadata = {}) {
@@ -31,6 +63,7 @@ function createTask(message, metadata = {}) {
   };
   tasks.set(id, task);
   sendPushNotification(task);
+  persistTasks(tasks);
   return task;
 }
 
@@ -44,6 +77,7 @@ function cancelTask(id) {
   if (!['completed', 'canceled', 'failed', 'rejected'].includes(task.status.state)) {
     setStatus(task, 'canceled');
   }
+  persistTasks(tasks);
   return task;
 }
 
@@ -51,6 +85,7 @@ function requestHumanInput(id, msgParts = []) {
   const task = tasks.get(id);
   if (!task) return null;
   setStatus(task, 'input-required', msgParts);
+  persistTasks(tasks);
   return task;
 }
 
