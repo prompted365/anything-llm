@@ -7,8 +7,20 @@ function taskEndpoints(app) {
 
   app.post("/tasks/enqueue", [validatedRequest], async (request, response) => {
     try {
-      const { description, assignedAgentId = null, parentTaskId = null, context = null } = reqBody(request);
-      const task = await Task.create({ description, assignedAgentId, parentTaskId, context });
+      const {
+        description,
+        assignedAgentId = null,
+        parentTaskId = null,
+        invocationId = null,
+        context = null,
+      } = reqBody(request);
+      const task = await Task.create({
+        description,
+        assignedAgentId,
+        parentTaskId,
+        invocationId,
+        context,
+      });
       if (!task) throw new Error("Failed to create task");
       response.status(200).json({ success: true, task });
     } catch (e) {

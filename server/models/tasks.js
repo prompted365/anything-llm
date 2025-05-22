@@ -17,13 +17,20 @@ const Task = {
     new BackgroundService().stop();
   },
 
-  create: async function ({ description, assignedAgentId = null, parentTaskId = null, context = null } = {}) {
+  create: async function ({
+    description,
+    assignedAgentId = null,
+    parentTaskId = null,
+    invocationId = null,
+    context = null,
+  } = {}) {
     try {
       const task = await prisma.tasks.create({
         data: {
           description: String(description),
           assignedAgentId: assignedAgentId !== undefined ? assignedAgentId : null,
           parentTaskId: parentTaskId !== undefined ? parentTaskId : null,
+          invocationId: invocationId !== undefined ? invocationId : null,
           context: context ? JSON.stringify(context) : null,
         },
       });

@@ -4,7 +4,7 @@ const {
   WorkspaceAgentInvocation,
 } = require("../../models/workspaceAgentInvocation");
 const { WorkspaceChats } = require("../../models/workspaceChats");
-const { AgentTasks } = require("../../models/agentTasks");
+const { Task } = require("../../models/tasks");
 const { safeJsonParse } = require("../http");
 const { USER_AGENT, WORKSPACE_AGENT } = require("./defaults");
 const ImportedPlugin = require("./imported");
@@ -576,11 +576,11 @@ class AgentHandler {
   }
 
   async pickTask(taskId) {
-    this.task = await AgentTasks.get({ id: taskId });
+    this.task = await Task.get({ id: taskId });
     if (!this.task) return null;
     this.taskContext =
       safeJsonParse(this.task.context || "{}")?.history || null;
-    await AgentTasks.update(this.task.id, { status: "in-progress" });
+    await Task.update(this.task.id, { status: Task.statuses.running });
     return this.task;
   }
 
@@ -592,16 +592,16 @@ class AgentHandler {
       ...contextUpdates,
       history: this.aibitat?.chats || existing.history || [],
     };
-    await AgentTasks.update(this.task.id, {
+    await Task.update(this.task.id, {
       context: newContext,
-      status: "completed",
+      status: Task.statuses.completed,
     });
-    const children = await AgentTasks.children(this.task.id);
+    const children = await Task.where({ parentTaskId: this.task.id });
     for (const child of children) {
       const childCtx = safeJsonParse(child.context || "{}");
-      await AgentTasks.update(child.id, {
+      await Task.update(child.id, {
         context: { ...childCtx, parentResult: newContext },
-        status: "queued",
+        status: Task.statuses.queued,
       });
     }
   }
