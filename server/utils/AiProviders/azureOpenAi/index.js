@@ -132,7 +132,7 @@ class AzureOpenAiLLM {
   async getChatCompletion(messages = [], { temperature = 0.7 }) {
     if (!this.model)
       throw new Error(
-        "No OPEN_MODEL_PREF ENV defined. This must the name of a deployment on your Azure account for an LLM chat model like GPT-3.5."
+        "No OPEN_MODEL_PREF ENV defined. This must the name of a deployment on your Azure account for an LLM chat model like gpt-4o."
       );
 
     const result = await LLMPerformanceMonitor.measureAsyncFunction(
@@ -164,7 +164,7 @@ class AzureOpenAiLLM {
   async streamGetChatCompletion(messages = [], { temperature = 0.7 }) {
     if (!this.model)
       throw new Error(
-        "No OPEN_MODEL_PREF ENV defined. This must the name of a deployment on your Azure account for an LLM chat model like GPT-3.5."
+        "No OPEN_MODEL_PREF ENV defined. This must the name of a deployment on your Azure account for an LLM chat model like gpt-4o."
       );
 
     const measuredStreamRequest = await LLMPerformanceMonitor.measureStream(

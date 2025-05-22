@@ -101,8 +101,8 @@ async function openAiModels(apiKey = null) {
       console.error(`OpenAI:listModels`, e.message);
       return [
         {
-          name: "gpt-3.5-turbo",
-          id: "gpt-3.5-turbo",
+          name: "gpt-4o",
+          id: "gpt-4o",
           object: "model",
           created: 1677610602,
           owned_by: "openai",
@@ -141,8 +141,8 @@ async function openAiModels(apiKey = null) {
           organization: "OpenAi",
         },
         {
-          name: "gpt-3.5-turbo-16k",
-          id: "gpt-3.5-turbo-16k",
+          name: "gpt-4o",
+          id: "gpt-4o",
           object: "model",
           created: 1683758102,
           owned_by: "openai-internal",

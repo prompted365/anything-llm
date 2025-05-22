@@ -204,6 +204,7 @@ model workspace_agent_invocations {
   lastUpdatedAt DateTime   @default(now())
   user          users?     @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
   workspace     workspaces @relation(fields: [workspace_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  tasks         tasks[] // <-- add this line for the relation
 
   @@index([uuid])
 }
@@ -363,7 +364,7 @@ model tasks {
   assignedAgentId Int?
   invocationId    Int?
   parentTaskId    Int?
-  context         Json?
+  context         String? // <-- change from Json? to String?
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 
@@ -376,4 +377,4 @@ model tasks {
   @@index([invocationId])
   @@index([parentTaskId])
 }
-}
+

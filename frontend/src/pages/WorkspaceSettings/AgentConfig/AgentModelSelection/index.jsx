@@ -17,7 +17,7 @@ function supportedModel(provider, model = "") {
   if (provider === "openai") {
     return (
       [
-        "gpt-3.5-turbo-0301",
+        "gpt-4o",
         "gpt-4-turbo-2024-04-09",
         "gpt-4-turbo",
         "o1-preview",

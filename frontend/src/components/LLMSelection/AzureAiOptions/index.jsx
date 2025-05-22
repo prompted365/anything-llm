@@ -62,8 +62,8 @@ export default function AzureAiOptions({ settings }) {
             className="border-none bg-theme-settings-input-bg text-white placeholder:text-theme-settings-input-placeholder text-sm rounded-lg focus:outline-primary-button active:outline-primary-button outline-none block w-full p-2.5"
             required={true}
           >
-            <option value={4096}>4,096 (gpt-3.5-turbo)</option>
-            <option value={16384}>16,384 (gpt-3.5-16k)</option>
+            <option value={4096}>4,096 (gpt-4o)</option>
+            <option value={16384}>16,384 (gpt-4o)</option>
             <option value={8192}>8,192 (gpt-4)</option>
             <option value={32768}>32,768 (gpt-4-32k)</option>
             <option value={128000}>

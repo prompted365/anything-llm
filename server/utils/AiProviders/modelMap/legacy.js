@@ -69,8 +69,8 @@ const LEGACY_MODEL_MAP = {
     "mixtral-8x7b-32768": 32768,
   },
   openai: {
-    "gpt-3.5-turbo": 16385,
-    "gpt-3.5-turbo-1106": 16385,
+    "gpt-4o": 16385,
+    "gpt-4o": 16385,
     "gpt-4o": 128000,
     "gpt-4o-2024-08-06": 128000,
     "gpt-4o-2024-05-13": 128000,

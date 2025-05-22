@@ -22,7 +22,7 @@ function persist(arr) {
     fs.mkdirSync(path.dirname(PERSIST_PATH), { recursive: true });
     fs.writeFileSync(
       PERSIST_PATH,
-      JSON.stringify(arr.map((t) => ({ ...t, runAt: t.runAt.toISOString() })),
+      JSON.stringify(arr.map((t) => ({ ...t, runAt: t.runAt.toISOString() }))),
       "utf8"
     );
   } catch (e) {

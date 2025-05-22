@@ -13,7 +13,7 @@ class TokenManager {
   static instance = null;
   static currentModel = null;
 
-  constructor(model = "gpt-3.5-turbo") {
+  constructor(model = "gpt-4o") {
     if (TokenManager.instance && TokenManager.currentModel === model) {
       this.log("Returning existing instance for model:", model);
       return TokenManager.instance;

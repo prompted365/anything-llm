@@ -4,16 +4,16 @@ const { RetryError } = require("../error.js");
 
 /**
  * The agent provider for the OpenAI API.
- * By default, the model is set to 'gpt-3.5-turbo'.
+ * By default, the model is set to 'gpt-4o'.
  */
 class OpenAIProvider extends Provider {
   model;
   static COST_PER_TOKEN = {
-    "gpt-3.5-turbo": {
+    "gpt-4o": {
       input: 0.0015,
       output: 0.002,
     },
-    "gpt-3.5-turbo-16k": {
+    "gpt-4o": {
       input: 0.003,
       output: 0.004,
     },
