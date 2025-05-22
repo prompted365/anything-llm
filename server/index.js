@@ -28,6 +28,7 @@ const { browserExtensionEndpoints } = require("./endpoints/browserExtension");
 const { communityHubEndpoints } = require("./endpoints/communityHub");
 const { agentFlowEndpoints } = require("./endpoints/agentFlows");
 const { mcpServersEndpoints } = require("./endpoints/mcpServers");
+const { taskQueueEndpoint } = require("./endpoints/taskQueue");
 const app = express();
 const apiRouter = express.Router();
 const FILE_LIMIT = "3GB";
@@ -60,11 +61,13 @@ embedManagementEndpoints(apiRouter);
 utilEndpoints(apiRouter);
 documentEndpoints(apiRouter);
 agentWebsocket(apiRouter);
+taskQueueEndpoint(apiRouter);
 experimentalEndpoints(apiRouter);
-developerEndpoints(app, apiRouter);
-communityHubEndpoints(apiRouter);
-agentFlowEndpoints(apiRouter);
-mcpServersEndpoints(apiRouter);
+  developerEndpoints(app, apiRouter);
+  communityHubEndpoints(apiRouter);
+  agentFlowEndpoints(apiRouter);
+  mcpServersEndpoints(apiRouter);
+  taskEndpoints(apiRouter);
 
 // Externally facing embedder endpoints
 embeddedEndpoints(apiRouter);
