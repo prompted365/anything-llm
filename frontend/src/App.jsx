@@ -25,6 +25,7 @@ const AdminUsers = lazy(() => import("@/pages/Admin/Users"));
 const AdminInvites = lazy(() => import("@/pages/Admin/Invitations"));
 const AdminWorkspaces = lazy(() => import("@/pages/Admin/Workspaces"));
 const AdminLogs = lazy(() => import("@/pages/Admin/Logging"));
+const TaskMonitor = lazy(() => import("@/pages/Admin/TaskMonitor"));
 const AdminAgents = lazy(() => import("@/pages/Admin/Agents"));
 const GeneralChats = lazy(() => import("@/pages/GeneralSettings/Chats"));
 const InterfaceSettings = lazy(
@@ -175,6 +176,10 @@ export default function App() {
                   <Route
                     path="/settings/event-logs"
                     element={<AdminRoute Component={AdminLogs} />}
+                  />
+                  <Route
+                    path="/settings/task-monitor"
+                    element={<AdminRoute Component={TaskMonitor} />}
                   />
                   <Route
                     path="/settings/embed-config"
